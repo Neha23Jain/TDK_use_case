@@ -23,6 +23,7 @@ class tdk_script:
         pass
 
     def extract_data(self, spark,basepath,path):
+        #data read
         df_input = spark.read.option("basepath", basepath).parquet(path)
         return df_input
 
