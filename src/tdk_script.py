@@ -6,6 +6,14 @@ from pyspark.sql.functions import *
 from pyspark.sql.window import Window
 from application_logger import *
 from config import *
+import logging
+import os
+from pyspark.sql import SparkSession
+
+
+logging.getLogger("org.apache.spark.util.ShutdownHookManager").setLevel(logging.ERROR)
+logging.getLogger("py4j").setLevel(logging.ERROR)
+logging.getLogger("pyspark").setLevel(logging.ERROR)
 
 logger=define_logger(log_file_location)
 class tdk_script:
@@ -20,6 +28,7 @@ class tdk_script:
                 .config("spark.sql.parquet.enableVectorizedReader", "false")\
                 .appName(appName)\
                 .getOrCreate()
+        spark.sparkContext.setLogLevel("WARN")
         return spark
 
     def extract_data(self, spark,basepath,path):
@@ -78,22 +87,33 @@ class tdk_script:
 
     def main(self):
         # configuration
-        
+        try:
 
-        spark = self.create_spark_session("TDK_USE_CASE")
-        logger.info('Spark Session Created')
+        #spark = self.create_spark_session("TDK_USE_CASE")
+            os.environ['PYSPARK_SUBMIT_ARGS'] = "--conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/dev/null pyspark-shell"
+            spark = SparkSession.builder.master("local")\
+                .config("spark.sql.parquet.enableVectorizedReader", "false")\
+                .appName('Spark_application')\
+                .getOrCreate()
+            spark.sparkContext.setLogLevel("WARN")
+            logger.info('Spark Session Created')
         
     
-        df_input = self.extract_data(spark,Input_file_directory,Input_file_path)
-        logger.info('Input File Read')
+            df_input = self.extract_data(spark,Input_file_directory,Input_file_path)
+            logger.info('Input File Read')
         
 
-        logger.info('fetch {} records from source files \n'.format(df_input.count()))
+            logger.info('fetch {} records from source files \n'.format(df_input.count()))
 
-        df_input = self.process_data(df_input)
-        df_input1=self.typecast_data(df_input)
-        
-        self.load_data_to_destination(df_input1,url,driver,dbtable,user,password)
+            df_input = self.process_data(df_input)
+            df_input1=self.typecast_data(df_input)
+            df_input1.write.format("csv").option("header",True).mode('overwrite').save("C:/Users/njneh/TDK/Output/file.csv")
+            #self.load_data_to_destination(df_input1,url,driver,dbtable,user,password)
+            logger.info('Data Written to destination')
 
-        spark.stop()
-        logger.info('Spark Session Stopped')
+            spark.stop()
+            logger.info('Spark Session Stopped')
+        except Exception as error:
+            print('WARNING -\n',error)
+script = tdk_script()
+script.main()
