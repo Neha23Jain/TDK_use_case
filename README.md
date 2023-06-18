@@ -42,7 +42,7 @@ To set up and run the pipeline, follow these steps:
 ## Additional Notes
 
 - Make sure you have the required permissions and access rights to read the input files and write data to the Oracle database.
-- Based on the incoming data for the future we can schedule the pieline using other tools.
+- Based on the incoming data for the future we can schedule deployement of the pieline using other tools like Docker,CICD,Bamboo,Airflow .
 - For troubleshooting or further customization, refer to the script code and the documentation of the used technologies (PySpark, Oracle, etc.).
 
 ## Contact Information
