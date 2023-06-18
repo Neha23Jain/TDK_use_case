@@ -1,0 +1,10 @@
+2023-06-18 20:14:07,281 Spark Session Created
+2023-06-18 20:14:14,171 Input File Read
+2023-06-18 20:14:16,605 fetch 262319 records from source files 
+
+2023-06-18 20:14:16,730 Converted execution_time_stamp column to timestamp type from String
+2023-06-18 20:14:16,902 Null values replaced from ovs_cust_name,sap_customer_no,item_name,item_code
+2023-06-18 20:14:17,043 Mapping Dictionary defined
+2023-06-18 20:14:17,277 data typecasted into destination datatype
+2023-06-18 20:14:26,949 Data Written to destination
+2023-06-18 20:14:27,417 Spark Session Stopped
