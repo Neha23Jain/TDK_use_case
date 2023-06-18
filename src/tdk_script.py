@@ -99,7 +99,7 @@ class tdk_script:
             df_input = self.process_data(df_input)
             df_input1=self.typecast_data(df_input)
             df_input1.write.format("csv").option("header",True).mode('overwrite').save("C:/Users/njneh/TDK/Output/file.csv")
-            #self.load_data_to_destination(df_input1,url,driver,dbtable,user,password)
+            self.load_data_to_destination(df_input1,url,driver,dbtable,user,password)
             logger.info('Data Written to destination')
 
             spark.stop()
